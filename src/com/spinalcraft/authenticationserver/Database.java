@@ -38,9 +38,8 @@ public class Database {
 	private void connect() throws SQLException{
 		conn = DriverManager.getConnection("jdbc:mysql://localhost", "root", "password");
 		
-		String query = "CREATE DATABASE IF NOT EXISTS ?";
+		String query = "CREATE DATABASE IF NOT EXISTS " + dbName;
 		PreparedStatement stmt = conn.prepareStatement(query);
-		stmt.setString(1, dbName);
 		stmt.execute();
 		
 		query = "USE " + dbName;
@@ -49,7 +48,7 @@ public class Database {
 	}
 	
 	private void createTables() throws SQLException{
-		String query = "CREATE TABLE IF NOT EXISTS actors (id INT PRIMARY KEY AUTO_INCREMENT, name TINYTEXT, key TINYTEXT)";
+		String query = "CREATE TABLE IF NOT EXISTS actors (id INT PRIMARY KEY AUTO_INCREMENT, username TINYTEXT, secretKey TINYTEXT)";
 		PreparedStatement stmt = conn.prepareStatement(query);
 		stmt.execute();
 		
@@ -57,7 +56,7 @@ public class Database {
 				+ "actor_id INT PRIMARY KEY, "
 				+ "accessKey VARCHAR(32) NOT NULL UNIQUE, "
 				+ "claimed TINYINT NOT NULL DEFAULT 0, "
-				+ "FOREIGN KEY (actor_id) REFERENCES manager_actors(id))";
+				+ "FOREIGN KEY (actor_id) REFERENCES actors(id))";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.execute();

@@ -17,6 +17,8 @@ public class RegistrationRequest {
 			Actor actor = Actor.getFromUnclaimedAccessKey(accessKey);
 			if(actor == null)
 				return;
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
