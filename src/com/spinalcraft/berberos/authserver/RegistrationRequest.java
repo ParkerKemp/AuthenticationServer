@@ -1,4 +1,4 @@
-package com.spinalcraft.authenticationserver;
+package com.spinalcraft.berberos.authserver;
 
 import java.net.Socket;
 import java.sql.SQLException;
