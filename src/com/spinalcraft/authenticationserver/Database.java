@@ -53,10 +53,9 @@ public class Database {
 		stmt.execute();
 		
 		query = "CREATE TABLE IF NOT EXISTS accessKeys ("
-				+ "actor_id INT PRIMARY KEY, "
+				+ "id INT PRIMARY KEY AUTO_INCREMENT, "
 				+ "accessKey VARCHAR(32) NOT NULL UNIQUE, "
-				+ "claimed TINYINT NOT NULL DEFAULT 0, "
-				+ "FOREIGN KEY (actor_id) REFERENCES actors(id))";
+				+ "claimed TINYINT NOT NULL DEFAULT 0)";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.execute();
