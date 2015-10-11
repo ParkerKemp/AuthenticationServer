@@ -11,7 +11,7 @@ import com.spinalcraft.berberos.authserver.Crypt;
 import com.spinalcraft.berberos.authserver.Receiver;
 import com.spinalcraft.berberos.authserver.Sender;
 import com.spinalcraft.berberos.common.Authenticator;
-import com.spinalcraft.berberos.common.Ticket;
+import com.spinalcraft.berberos.common.ClientTicket;
 
 public abstract class BerberosService {
 	private SecretKey secretKey;
@@ -50,7 +50,7 @@ public abstract class BerberosService {
 		return false;
 	}
 	
-	public ClientHandler getClientHandler(Socket socket){
+	public ServiceAmbassador getClientHandler(Socket socket){
 		Receiver receiver = new Receiver(socket, Crypt.getInstance());
 		receiver.receiveMessage();
 		String ticketCipher = receiver.getItem("ticket");
@@ -59,14 +59,14 @@ public abstract class BerberosService {
 		if(authenticatorCached(authCipher))
 			return null;
 		
-		Ticket ticket = Ticket.fromCipher(ticketCipher, secretKey);
+		ClientTicket ticket = ClientTicket.fromCipher(ticketCipher, secretKey);
 		if(ticket == null)
 			return null;
 		
 		Authenticator authenticator = Authenticator.fromCipher(authCipher, ticket.sessionKey);
 		
 		if(validTicket(ticket) && validAuthenticator(authenticator, ticket) && cacheAuthenticator(authCipher))
-			return new ClientHandler(socket, ticket.sessionKey);
+			return new ServiceAmbassador(socket, ticket.sessionKey);
 		return null;
 	}
 	
@@ -74,11 +74,11 @@ public abstract class BerberosService {
 	
 	protected abstract boolean cacheAuthenticator(String authenticator);
 	
-	private boolean validTicket(Ticket ticket){
+	private boolean validTicket(ClientTicket ticket){
 		return ticket.expiration > System.currentTimeMillis() / 1000;
 	}
 	
-	private boolean validAuthenticator(Authenticator authenticator, Ticket ticket){
+	private boolean validAuthenticator(Authenticator authenticator, ClientTicket ticket){
 		return authenticator.identity.equals(ticket.identity);
 //		String json = Crypt.getInstance().decryptMessage(ticket.sessionKey, authenticator.getBytes());
 //		if(json == null){

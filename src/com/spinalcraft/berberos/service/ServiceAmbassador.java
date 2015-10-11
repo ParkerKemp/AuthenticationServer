@@ -7,16 +7,13 @@ import javax.crypto.SecretKey;
 import com.google.gson.JsonObject;
 import com.spinalcraft.berberos.authserver.Crypt;
 import com.spinalcraft.berberos.authserver.Sender;
+import com.spinalcraft.berberos.common.Ambassador;
 import com.spinalcraft.berberos.common.Authenticator;
-import com.spinalcraft.easycrypt.messenger.Message;
 
-public class ClientHandler {
-	private Socket socket;
-	private SecretKey sessionKey;
+public class ServiceAmbassador extends Ambassador{
 	
-	public ClientHandler(Socket socket, SecretKey sessionKey){
-		this.socket = socket;
-		this.sessionKey = sessionKey;
+	public ServiceAmbassador(Socket socket, SecretKey sessionKey){
+		super(socket, sessionKey);
 		sendAuthenticator();
 	}
 	
@@ -30,13 +27,5 @@ public class ClientHandler {
 		byte[] cipher = Crypt.getInstance().encryptMessage(sessionKey, obj.toString());
 		sender.addItem("authenticator", Crypt.getInstance().encode(cipher));
 		sender.sendMessage();
-	}
-	
-	public Message getRequest(){
-//		Receiver receiver = new Receiver(socket, Crypt.getInstance());
-		
-		
-		
-		return null;
 	}
 }
