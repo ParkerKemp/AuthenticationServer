@@ -11,31 +11,4 @@ public class Receiver extends MessageReceiver{
 	public Receiver(Socket socket, Crypt crypt) {
 		super(socket, crypt);
 	}
-
-//	@Override
-//	protected long getLastTransmitTimeForIdentifier(String identifier) {
-////		try {
-//////			Actor actor = Actor.getFromPublicKey(identifier);
-//////			if(actor == null){
-//////				return -1;
-//////			}
-//////			return actor.lastTransmit;
-////		} catch (SQLException e) {
-////			e.printStackTrace();
-////		}
-//		return -1;
-//	}
-//
-//	@Override
-//	protected SecretKey getSecretKeyForIdentifier(String identifier) {
-////		try {
-//////			Actor actor = Actor.getFromPublicKey(identifier);
-//////			if(actor == null)
-//////				return null;
-//////			return actor.secretKey;
-////		} catch (SQLException e) {
-////			e.printStackTrace();
-////		}
-//		return null;
-//	}
 }

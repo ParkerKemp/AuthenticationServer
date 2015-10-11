@@ -54,7 +54,7 @@ public class TicketRequest {
 	}
 	
 	private ClientTicket generateClientTicket(String identity, SecretKey sessionKey){
-		ClientTicket ticket = new ClientTicket();
+		ClientTicket ticket = new ClientTicket(Crypt.getInstance());
 		ticket.identity = identity;
 		ticket.sessionKey = sessionKey;
 		ticket.expiration = (System.currentTimeMillis() / 1000) + 60 * 60;
@@ -63,7 +63,7 @@ public class TicketRequest {
 	}
 	
 	private ServiceTicket generateServiceTicket(String clientIdentity, String serviceIdentity, SecretKey sessionKey){
-		ServiceTicket ticket = new ServiceTicket();
+		ServiceTicket ticket = new ServiceTicket(Crypt.getInstance());
 		ticket.clientIdentity = clientIdentity;
 		ticket.serviceIdentity = serviceIdentity;
 		ticket.sessionKey = sessionKey;
