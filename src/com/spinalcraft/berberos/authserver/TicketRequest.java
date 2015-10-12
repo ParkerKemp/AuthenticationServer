@@ -23,13 +23,17 @@ public class TicketRequest {
 	public void process(){
 		String identity = receiver.getHeader("identity");
 		SecretKey clientKey = clientKey(identity);
-		if(clientKey == null)
+		if(clientKey == null){
+			sendDenial();
 			return;
+		}
 		
 		String service = receiver.getItem("service");
 		SecretKey serviceKey = serviceKey(service);
-		if(serviceKey == null)
+		if(serviceKey == null){
+			sendDenial();
 			return;
+		}
 		
 		SecretKey sessionKey;
 		try {
@@ -39,18 +43,27 @@ public class TicketRequest {
 			ServiceTicket serviceTicket = generateServiceTicket(identity, service, sessionKey);
 			
 			String clientTicketCipher = Crypt.getInstance().encode(Crypt.getInstance().encryptMessage(clientKey, clientTicket.getJson().toString()));
-			String serviceTicketCipher = Crypt.getInstance().encode(Crypt.getInstance().encryptMessage(clientKey, serviceTicket.getJson().toString()));
+			String serviceTicketCipher = Crypt.getInstance().encode(Crypt.getInstance().encryptMessage(serviceKey, serviceTicket.getJson().toString()));
+			
+//			String clientTicketDecrypted = Crypt.getInstance().decryptMessage(clientKey, Crypt.getInstance().decode(clientTicketCipher));
+			System.out.println("Client key: " + Crypt.getInstance().stringFromSecretKey(clientKey));
 			
 			Sender sender = new Sender(socket, Crypt.getInstance());
 			sender.addHeader("status", "good");
-			sender.addItem("serviceTicket", clientTicketCipher);
-			sender.addItem("clientTicket", serviceTicketCipher);
+			sender.addItem("serviceTicket", serviceTicketCipher);
+			sender.addItem("clientTicket", clientTicketCipher);
 			
 			sender.sendMessage();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	private void sendDenial(){
+		Sender sender = new Sender(socket, Crypt.getInstance());
+		sender.addHeader("status", "bad");
+		sender.sendMessage();
 	}
 	
 	private ClientTicket generateClientTicket(String identity, SecretKey sessionKey){
