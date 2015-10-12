@@ -28,30 +28,6 @@ public class ClientHandler implements Runnable{
 			break;
 		}
 	}
-	
-//	private void processRequest(MessageReceiver receiver){
-//		String intent = receiver.getHeader("intent");
-//		switch(intent){
-//		case "access":
-//			(new AccessRequest(receiver, conn)).process();
-//			break;
-//		case "message":
-//			String publicKey = receiver.getHeader("publicKey");
-//			System.out.println("Got Public Key: " + publicKey);
-//			Actor actor;
-//			try {
-//				actor = Actor.getFromPublicKey(publicKey);
-//				String message = receiver.getItem("message");
-//				System.out.println("Received Message: " + message);
-//				MessageSender sender = new Sender(conn, Crypt.getInstance());
-//				sender.addItem("message", message + " to you as well");
-//				sender.sendEncrypted(actor.secretKey);
-//			} catch (SQLException | IOException e) {
-//				e.printStackTrace();
-//			}
-//			break;
-//		}
-//	}
 }
 
 
