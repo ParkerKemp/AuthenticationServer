@@ -89,14 +89,14 @@ public class TicketRequest {
 	}
 	
 	private SecretKey clientKey(String identity){
-		String query = "SELECT secretKey FROM actors WHERE username = ?";
+		String query = "SELECT hash FROM users WHERE identity = ?";
 		try {
 			PreparedStatement stmt = Database.getInstance().prepareStatement(query);
 			stmt.setString(1, identity);
 			ResultSet rs = stmt.executeQuery();
 			if(!rs.first())
 				return null;
-			String hash = rs.getString("secretKey");
+			String hash = rs.getString("hash");
 			return Crypt.getInstance().loadSecretKey(hash);
 		} catch (SQLException e) {
 			e.printStackTrace();

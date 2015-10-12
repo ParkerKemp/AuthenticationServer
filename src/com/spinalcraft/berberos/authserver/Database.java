@@ -48,13 +48,19 @@ public class Database {
 	}
 	
 	private void createTables() throws SQLException{
-		String query = "CREATE TABLE IF NOT EXISTS actors (id INT PRIMARY KEY AUTO_INCREMENT, username TINYTEXT, secretKey TINYTEXT)";
+		String query = "CREATE TABLE IF NOT EXISTS users (identity VARCHAR(32) PRIMARY KEY, hash TINYTEXT)";
 		PreparedStatement stmt = conn.prepareStatement(query);
 		stmt.execute();
+		
+		query = "CREATE TABLE IF NOT EXISTS services (identity VARCHAR(32) PRIMARY KEY, secretKey TINYTEXT)";
+		stmt = conn.prepareStatement(query);
+		stmt.execute();
+		
 		
 		query = "CREATE TABLE IF NOT EXISTS accessKeys ("
 				+ "id INT PRIMARY KEY AUTO_INCREMENT, "
 				+ "accessKey VARCHAR(32) NOT NULL UNIQUE, "
+				+ "type INT NOT NULL, "
 				+ "claimed TINYINT NOT NULL DEFAULT 0)";
 		
 		stmt = conn.prepareStatement(query);

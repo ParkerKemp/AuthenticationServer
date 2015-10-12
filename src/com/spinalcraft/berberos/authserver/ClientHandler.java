@@ -24,6 +24,7 @@ public class ClientHandler implements Runnable{
 			(new TicketRequest(receiver, conn)).process();
 			break;
 		case "registerService":
+			(new RegistrationRequest(receiver, conn)).process();
 			break;
 		}
 	}

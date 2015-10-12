@@ -3,19 +3,18 @@ package com.spinalcraft.berberos.authserver;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class GetAuth {
+public class GetServiceKey {
 	public static String get(){
 		String random = Crypt.getInstance().randomString();
-		String url = "http://auth.spinalcraft.com?accessKey=" + random;
 		
 		if(insert(random))
-			return url;
+			return random;
 		else
 			return null;
 	}
 	
 	private static boolean insert(String key){
-		String query = "INSERT INTO accessKeys (accessKey) VALUES (?)";
+		String query = "INSERT INTO accessKeys (accessKey, type) VALUES (?, 2)";
 		PreparedStatement stmt;
 		try {
 			stmt = Database.getInstance().prepareStatement(query);
