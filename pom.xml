@@ -56,7 +56,7 @@
 								<excludes>
 								</excludes>
 							</artifactSet>
-							<outputFile>C:\Users\Parker\Dev\jars\Berberos\Berberos.jar</outputFile>
+							<outputFile>C:\Users\Parker\Dev\jars\SpinalcraftNetwork\Berberos\Berberos.jar</outputFile>
 						</configuration>
 					</execution>
 				</executions>

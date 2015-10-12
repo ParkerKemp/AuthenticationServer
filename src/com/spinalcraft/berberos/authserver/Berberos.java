@@ -1,7 +1,10 @@
 package com.spinalcraft.berberos.authserver;
 
+import com.spinalcraft.easycrypt.messenger.Messenger;
+
 public class Berberos {
 	public static void main(String[] args){
+		Messenger.shouldShowDebug = true;
 		Database.getInstance().init("Authentication");
 		if(args.length > 0)
 			switch(args[0]){

@@ -21,8 +21,10 @@ public class RegistrationRequest {
 		String identity = receiver.getItem("identity");
 		String accessKey = receiver.getItem("accessKey");
 		String publicKeyString = receiver.getItem("publicKey");
-		if(!keyIsUnclaimed(accessKey))
+		if(!keyIsUnclaimed(accessKey)){
+			sendDenial();
 			return;
+		}
 		
 		try {
 			PublicKey publicKey = Crypt.getInstance().loadPublicKey(publicKeyString);
@@ -39,6 +41,12 @@ public class RegistrationRequest {
 		Sender sender = new Sender(socket, Crypt.getInstance());
 		sender.addHeader("status", "good");
 		sender.addItem("secretKey", Crypt.getInstance().encode(Crypt.getInstance().encryptKey(publicKey, secretKey)));
+		sender.sendMessage();
+	}
+	
+	private void sendDenial(){
+		Sender sender = new Sender(socket, Crypt.getInstance());
+		sender.addHeader("status", "bad");
 		sender.sendMessage();
 	}
 	
