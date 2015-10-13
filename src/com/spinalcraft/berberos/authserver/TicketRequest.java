@@ -8,10 +8,11 @@ import java.sql.SQLException;
 
 import javax.crypto.SecretKey;
 
-import com.spinalcraft.berberos.common.ClientTicket;
-import com.spinalcraft.berberos.common.ServiceTicket;
+import com.spinalcraft.berberos.client.ClientTicket;
+import com.spinalcraft.berberos.service.ServiceTicket;
 
 public class TicketRequest {
+	private static final long ticketDuration = 60 * 60 * 12; //12 hours (in seconds)
 	private Receiver receiver;
 	private Socket socket;
 	
@@ -39,8 +40,10 @@ public class TicketRequest {
 		try {
 			sessionKey = Crypt.getInstance().generateSecretKey();
 			
-			ClientTicket clientTicket = generateClientTicket(identity, sessionKey);
-			ServiceTicket serviceTicket = generateServiceTicket(identity, service, sessionKey);
+			long expiration = getExpiration();
+			
+			ClientTicket clientTicket = generateClientTicket(identity, sessionKey, expiration);
+			ServiceTicket serviceTicket = generateServiceTicket(identity, service, sessionKey, expiration);
 			
 			String clientTicketCipher = Crypt.getInstance().encode(Crypt.getInstance().encryptMessage(clientKey, clientTicket.getJson().toString()));
 			String serviceTicketCipher = Crypt.getInstance().encode(Crypt.getInstance().encryptMessage(serviceKey, serviceTicket.getJson().toString()));
@@ -66,21 +69,25 @@ public class TicketRequest {
 		sender.sendMessage();
 	}
 	
-	private ClientTicket generateClientTicket(String identity, SecretKey sessionKey){
+	private long getExpiration(){
+		return (System.currentTimeMillis() / 1000) + ticketDuration;
+	}
+	
+	private ClientTicket generateClientTicket(String identity, SecretKey sessionKey, long expiration){
 		ClientTicket ticket = new ClientTicket(Crypt.getInstance());
 		ticket.identity = identity;
 		ticket.sessionKey = sessionKey;
-		ticket.expiration = (System.currentTimeMillis() / 1000) + 60 * 60;
+		ticket.expiration = expiration;
 		
 		return ticket;
 	}
 	
-	private ServiceTicket generateServiceTicket(String clientIdentity, String serviceIdentity, SecretKey sessionKey){
+	private ServiceTicket generateServiceTicket(String clientIdentity, String serviceIdentity, SecretKey sessionKey, long expiration){
 		ServiceTicket ticket = new ServiceTicket(Crypt.getInstance());
 		ticket.clientIdentity = clientIdentity;
 		ticket.serviceIdentity = serviceIdentity;
 		ticket.sessionKey = sessionKey;
-		ticket.expiration = (System.currentTimeMillis() / 1000) + 60 * 60;
+		ticket.expiration = expiration;
 		
 		return ticket;
 	}
