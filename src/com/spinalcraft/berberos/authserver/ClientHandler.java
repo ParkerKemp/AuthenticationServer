@@ -26,6 +26,9 @@ public class ClientHandler implements Runnable{
 		case "registerService":
 			(new RegistrationRequest(receiver, conn)).process();
 			break;
+		case "testCredentials":
+			(new CredentialVerification(receiver, conn)).process();
+			break;
 		}
 	}
 }
