@@ -1,0 +1,4 @@
+git pull
+mvn package
+mkdir /opt/Berberos 2>/dev/null
+cp target/Berberos.jar /opt/Berberos
