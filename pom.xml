@@ -79,13 +79,13 @@
 		<dependency>
 			<groupId>com.spinalcraft</groupId>
 			<artifactId>easycrypt</artifactId>
-			<version>LATEST</version>
+			<version>SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.spinalcraft</groupId>
 			<artifactId>berbtools</artifactId>
-			<version>LATEST</version>
+			<version>SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
