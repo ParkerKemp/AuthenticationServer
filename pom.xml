@@ -68,10 +68,9 @@
 		<repository>
 			<id>spinalcraft-repo</id>
 			<url>http://maven.spinalcraft.com</url>
-			<releases>
-				<enabled/>
+			<snapshots>
 				<updatePolicy>always</updatePolicy>
-			</releases>
+			</snapshots>
 		</repository>
 	</repositories>
 
@@ -79,13 +78,13 @@
 		<dependency>
 			<groupId>com.spinalcraft</groupId>
 			<artifactId>easycrypt</artifactId>
-			<version>SNAPSHOT</version>
+			<version>1.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.spinalcraft</groupId>
 			<artifactId>berbtools</artifactId>
-			<version>SNAPSHOT</version>
+			<version>1.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
