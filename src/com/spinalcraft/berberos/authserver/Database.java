@@ -52,7 +52,7 @@ public class Database {
 		PreparedStatement stmt = conn.prepareStatement(query);
 		stmt.execute();
 		
-		query = "CREATE TABLE IF NOT EXISTS services (identity VARCHAR(32) PRIMARY KEY, secretKey TINYTEXT NOT NULL, serviceAddress VARCHAR(64) NOT NULL, port INT NOT NULL)";
+		query = "CREATE TABLE IF NOT EXISTS services (identity VARCHAR(32) PRIMARY KEY, secretKey TINYTEXT NOT NULL, serviceAddress VARCHAR(64) NOT NULL, servicePort INT NOT NULL)";
 		stmt = conn.prepareStatement(query);
 		stmt.execute();
 				
