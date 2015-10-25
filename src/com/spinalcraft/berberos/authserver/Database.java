@@ -52,11 +52,10 @@ public class Database {
 		PreparedStatement stmt = conn.prepareStatement(query);
 		stmt.execute();
 		
-		query = "CREATE TABLE IF NOT EXISTS services (identity VARCHAR(32) PRIMARY KEY, secretKey TINYTEXT)";
+		query = "CREATE TABLE IF NOT EXISTS services (identity VARCHAR(32) PRIMARY KEY, secretKey TINYTEXT NOT NULL, serviceAddress VARCHAR(64) NOT NULL, port INT NOT NULL)";
 		stmt = conn.prepareStatement(query);
 		stmt.execute();
-		
-		
+				
 		query = "CREATE TABLE IF NOT EXISTS accessKeys ("
 				+ "id INT PRIMARY KEY AUTO_INCREMENT, "
 				+ "accessKey VARCHAR(32) NOT NULL UNIQUE, "

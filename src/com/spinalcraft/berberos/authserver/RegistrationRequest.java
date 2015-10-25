@@ -20,6 +20,8 @@ public class RegistrationRequest {
 	public void process(){
 		String identity = receiver.getItem("identity");
 		String accessKey = receiver.getItem("accessKey");
+		String serviceAddress = receiver.getItem("serviceAddress");
+		int servicePort = Integer.parseInt(receiver.getItem("servicePort"));
 		String publicKeyString = receiver.getItem("publicKey");
 		if(!keyIsUnclaimed(accessKey)){
 			sendDenial();
@@ -29,7 +31,7 @@ public class RegistrationRequest {
 		try {
 			PublicKey publicKey = Crypt.getInstance().loadPublicKey(publicKeyString);
 			SecretKey secretKey = Crypt.getInstance().generateSecretKey();
-			insertService(identity, Crypt.getInstance().stringFromSecretKey(secretKey));
+			insertService(identity, Crypt.getInstance().stringFromSecretKey(secretKey), serviceAddress, servicePort);
 			claimKey(accessKey);
 			sendResponse(publicKey, secretKey);
 		} catch (GeneralSecurityException e) {
@@ -50,12 +52,14 @@ public class RegistrationRequest {
 		sender.sendMessage();
 	}
 	
-	private void insertService(String serviceName, String secretKey){
-		String query = "INSERT INTO services (identity, secretKey) VALUES (?, ?)";
+	private void insertService(String serviceName, String secretKey, String serviceAddress, int servicePort){
+		String query = "INSERT INTO services (identity, secretKey, serviceAddress, servicePort) VALUES (?, ?, ?, ?)";
 		try {
 			PreparedStatement stmt = Database.getInstance().prepareStatement(query);
 			stmt.setString(1, serviceName);
 			stmt.setString(2, secretKey);
+			stmt.setString(3, serviceAddress);
+			stmt.setInt(4, servicePort);
 			stmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -23,9 +23,10 @@ public class TicketRequest extends Responder{
 			return;
 		}
 		
-		String service = receiver.getItem("service");
-		SecretKey serviceKey = serviceKey(service);
-		if(serviceKey == null){
+		String serviceString = receiver.getItem("service");
+		Service service = Service.fromIdentity(serviceString);
+//		SecretKey serviceKey = serviceKey(service);
+		if(service == null){
 			sendDenial();
 			return;
 		}
@@ -36,14 +37,14 @@ public class TicketRequest extends Responder{
 			
 			long expiration = getExpiration();
 			
-			ClientTicket clientTicket = generateClientTicket(identity, sessionKey, expiration);
+			ClientTicket clientTicket = generateClientTicket(identity, service.serviceAddress, service.servicePort, sessionKey, expiration);
 			ServiceTicket serviceTicket = generateServiceTicket(identity, service, sessionKey, expiration);
 			
 			String clientTicketCipher = Crypt.getInstance().encode(Crypt.getInstance().encryptMessage(clientKey, clientTicket.getJson().toString()));
-			String serviceTicketCipher = Crypt.getInstance().encode(Crypt.getInstance().encryptMessage(serviceKey, serviceTicket.getJson().toString()));
+			String serviceTicketCipher = Crypt.getInstance().encode(Crypt.getInstance().encryptMessage(service.secretKey, serviceTicket.getJson().toString()));
 			
 //			String clientTicketDecrypted = Crypt.getInstance().decryptMessage(clientKey, Crypt.getInstance().decode(clientTicketCipher));
-			System.out.println("Client key: " + Crypt.getInstance().stringFromSecretKey(clientKey));
+//			System.out.println("Client key: " + Crypt.getInstance().stringFromSecretKey(clientKey));
 			
 			Sender sender = new Sender(socket, Crypt.getInstance());
 			sender.addHeader("status", "good");
@@ -61,19 +62,21 @@ public class TicketRequest extends Responder{
 		return (System.currentTimeMillis() / 1000) + ticketDuration;
 	}
 	
-	private ClientTicket generateClientTicket(String identity, SecretKey sessionKey, long expiration){
+	private ClientTicket generateClientTicket(String identity, String serviceAddress, int servicePort, SecretKey sessionKey, long expiration){
 		ClientTicket ticket = new ClientTicket(Crypt.getInstance());
 		ticket.identity = identity;
+		ticket.serviceAddress = serviceAddress;
+		ticket.servicePort = servicePort;
 		ticket.sessionKey = sessionKey;
 		ticket.expiration = expiration;
 		
 		return ticket;
 	}
 	
-	private ServiceTicket generateServiceTicket(String clientIdentity, String serviceIdentity, SecretKey sessionKey, long expiration){
+	private ServiceTicket generateServiceTicket(String clientIdentity, Service service, SecretKey sessionKey, long expiration){
 		ServiceTicket ticket = new ServiceTicket(Crypt.getInstance());
 		ticket.clientIdentity = clientIdentity;
-		ticket.serviceIdentity = serviceIdentity;
+		ticket.serviceIdentity = service.identity;
 		ticket.sessionKey = sessionKey;
 		ticket.expiration = expiration;
 		
