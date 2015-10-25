@@ -1,4 +1,10 @@
+function error(){
+  read -p "Press any key to continue... " -n1 -s
+  exit 1
+}
+
+
 git pull
-mvn package
+mvn package || error
 mkdir /opt/Berberos 2>/dev/null
 cp target/Berberos.jar /opt/Berberos
