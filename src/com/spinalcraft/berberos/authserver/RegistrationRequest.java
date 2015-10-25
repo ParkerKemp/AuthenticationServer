@@ -31,9 +31,10 @@ public class RegistrationRequest {
 		try {
 			PublicKey publicKey = Crypt.getInstance().loadPublicKey(publicKeyString);
 			SecretKey secretKey = Crypt.getInstance().generateSecretKey();
-			insertService(identity, Crypt.getInstance().stringFromSecretKey(secretKey), serviceAddress, servicePort);
-			claimKey(accessKey);
-			sendResponse(publicKey, secretKey);
+			if(insertService(identity, Crypt.getInstance().stringFromSecretKey(secretKey), serviceAddress, servicePort) && claimKey(accessKey))
+				sendResponse(publicKey, secretKey);
+			else
+				sendDenial();
 		} catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		}
@@ -52,7 +53,7 @@ public class RegistrationRequest {
 		sender.sendMessage();
 	}
 	
-	private void insertService(String serviceName, String secretKey, String serviceAddress, int servicePort){
+	private boolean insertService(String serviceName, String secretKey, String serviceAddress, int servicePort){
 		String query = "INSERT INTO services (identity, secretKey, serviceAddress, servicePort) VALUES (?, ?, ?, ?)";
 		try {
 			PreparedStatement stmt = Database.getInstance().prepareStatement(query);
@@ -61,19 +62,23 @@ public class RegistrationRequest {
 			stmt.setString(3, serviceAddress);
 			stmt.setInt(4, servicePort);
 			stmt.execute();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 	
-	private void claimKey(String accessKey){
+	private boolean claimKey(String accessKey){
 		String query = "UPDATE accessKeys SET claimed = 1 WHERE accessKey = ?";
 		try {
 			PreparedStatement stmt = Database.getInstance().prepareStatement(query);
 			stmt.setString(1, accessKey);
 			stmt.execute();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 	
