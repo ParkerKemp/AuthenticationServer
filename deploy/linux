@@ -3,7 +3,6 @@ function error(){
   exit 1
 }
 
-
 git pull
 mvn package || error
 mkdir /opt/Berberos 2>/dev/null
