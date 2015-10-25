@@ -68,6 +68,10 @@
 		<repository>
 			<id>spinalcraft-repo</id>
 			<url>http://maven.spinalcraft.com</url>
+			<releases>
+				<enabled/>
+				<updatePolicy>always</updatePolicy>
+			</releases>
 		</repository>
 	</repositories>
 
