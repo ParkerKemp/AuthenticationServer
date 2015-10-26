@@ -4,6 +4,7 @@ function error(){
 }
 
 git pull
-mvn package || error
+mvn clean
+mvn package -Dmaven.test.skip=true || error
 mkdir /opt/Berberos 2>/dev/null
 cp target/Berberos.jar /opt/Berberos
